@@ -28,11 +28,11 @@ function M.welcome()
 end
 
 function M.changelog()
-  M.open("CHANGELOG.md", { plugin = "LazyVim" })
+  M.open("CHANGELOG.md", { plugin = "QuanVim" })
 end
 
 function M.lazyvim(when_changed)
-  M.open("NEWS.md", { plugin = "LazyVim", when_changed = when_changed })
+  M.open("NEWS.md", { plugin = "QuanVim", when_changed = when_changed })
 end
 
 function M.neovim(when_changed)

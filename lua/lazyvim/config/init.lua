@@ -313,7 +313,7 @@ function M.init()
     return
   end
   M.did_init = true
-  local plugin = require("lazy.core.config").spec.plugins.LazyVim
+  local plugin = require("lazy.core.config").spec.plugins.QuanVim
   if plugin then
     vim.opt.rtp:append(plugin.dir)
   end
