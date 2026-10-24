@@ -13,7 +13,7 @@ require("lazyvim.config").init()
 
 return {
   { "folke/lazy.nvim", version = "*" },
-  { "LazyVim/LazyVim", priority = 10000, lazy = false, opts = {}, cond = true, version = "*" },
+  { "andr515i/QuanVim", priority = 10000, lazy = false, opts = {}, cond = true, version = false },
   {
     "folke/snacks.nvim",
     priority = 1000,
