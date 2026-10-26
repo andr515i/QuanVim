@@ -1,3 +1,39 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
+"""Run mini.test offline with disposable dependencies and state."""
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
 
-nvim -l tests/minit.lua --minitest "$@"
+repo = Path(__file__).resolve().parent.parent
+source = Path(os.environ.get("QUANVIM_TEST_DEPS", Path.home() / ".local/share/quanvim/lazy"))
+registry = Path(os.environ.get(
+    "QUANVIM_TEST_REGISTRY", source.parent / "mason/registries/github/mason-org/mason-registry"
+))
+dependencies = (
+    "lazy.nvim", "mini.nvim", "plenary.nvim", "mini.icons", "mason.nvim",
+    "mason-lspconfig.nvim", "nvim-treesitter", "snacks.nvim",
+)
+missing = [str(source / name) for name in dependencies if not (source / name / "lua").is_dir()]
+if not (registry / "registry.json").is_file():
+    missing.append(str(registry / "registry.json"))
+if missing:
+    sys.exit("Missing offline test dependencies (nothing was downloaded):\n" + "\n".join(missing))
+
+with tempfile.TemporaryDirectory(prefix="quanvim-tests-") as temporary:
+    root = Path(temporary)
+    for name in dependencies:
+        shutil.copytree(source / name, root / "deps" / name, ignore=shutil.ignore_patterns(".git"))
+    shutil.copytree(registry, root / "data/nvim/mason/registries/github/mason-org/mason-registry")
+    env = os.environ.copy()
+    for name in ("LAZY_PATH", "LAZY_STDPATH", "VIMINIT", "EXINIT", "LUA_PATH", "LUA_CPATH"):
+        env.pop(name, None)
+    env.update(HOME=str(root / "home"), NVIM_APPNAME="nvim", QUANVIM_TEST_ROOT=str(root))
+    for name in ("config", "data", "state", "cache"):
+        env["XDG_" + name.upper() + "_HOME"] = str(root / name)
+    result = subprocess.run(
+        ["nvim", "-l", "tests/minit.lua", *sys.argv[1:]], cwd=repo, env=env, timeout=180
+    )
+    sys.exit(result.returncode)
