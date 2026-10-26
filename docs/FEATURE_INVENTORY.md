@@ -4,7 +4,7 @@ Snapshot: 2026-10-25, source `394859cc`. Read with [architecture](ARCHITECTURE.m
 
 ## Scope and classification
 
-The distribution has **150 Lua files / 15,274 lines**: **115 extras files / 9,994 lines**, plus **35 other Lua files / 5,280 lines**. Counts include comments and blank lines. The personal lockfile has **60 entries**; a lockfile is not an active-plugin list. Its source entry currently points upstream, as detailed in ARCHITECTURE.md. There are no runtime/plugin-count or startup-performance measurements from this audit.
+The distribution has **150 Lua files / 15,274 lines**: **115 extras files / 9,994 lines**, plus **35 other Lua files / 5,280 lines**. Counts include comments and blank lines. The personal lockfile has **60 entries**; a lockfile is not an active-plugin list. At the audit snapshot its source entry pointed upstream, as detailed in ARCHITECTURE.md; the October 26 follow-up corrected the isolated consumer and verified QuanVim through lazy.nvim. There are no runtime/plugin-count or startup-performance measurements from this audit.
 
 Classifications describe responsibility, not removal recommendations:
 
@@ -65,7 +65,7 @@ Keep these distinctions: a parser is not an LSP server; Mason is not an LSP clie
 
 ## Personal feature selections
 
-**V:** isolated and old `lazyvim.json` both list the following 11 extras and retain `install_version = 7`. These rows describe the audited **fork's** implementations; today's upstream-pointing consumer is not proof these exact implementations are loaded.
+**V:** isolated and old `lazyvim.json` both list the following 11 extras and retain `install_version = 7`. These rows describe the audited **fork's** implementations; the October 25 upstream-pointing consumer was not proof these exact implementations were loaded. The October 26 follow-up verified the corrected isolated consumer loads QuanVim.
 
 | Extra | Bundled functionality / dependencies |
 | --- | --- |
@@ -96,7 +96,7 @@ With the fork's current history rules and no explicit provider globals, default 
 | `config/options.lua` | Four-space indent, scrolloff 18, wrapping, no swap/backup, persistent undo at shared `~/.vim/undodir`, error-filtered diagnostic attempts, localleader `#`, theme reload command |
 | `config/keymaps.lua` | Fixed 22-line movement, centered searches, substitution helpers, diagnostics/quickfix shortcuts, command aliases, project runner, Fzf TODO search, manual Copilot toggle, LuaSnip navigation, character move |
 | `config/autocmds.lua` | Kitty reload command, live diagnostic quickfix replacement, Rust hints off, spelling off; host-specific behavior mixed with editor policy |
-| `plugins/LazyVim.lua` | Chromognome selection on upstream plugin identity today; would need correct fork identity when switching consumer |
+| `plugins/LazyVim.lua` | Chromognome selection on the distro plugin identity; the October 26 follow-up corrected that identity to QuanVim |
 | `plugins/blink.lua`, `snip.lua` | LuaSnip preset, snippet scoring/order and buffer toggle, Lua fuzzy engine; lazy-load Lua snippets from consumer directory |
 | `plugins/lazydev.lua` | Lua typing library; also declares old nvim-cmp source fragment, despite Blink's bundle disabling that plugin |
 | `plugins/lsp.lua`, `java.lua`, `rustaceanvim.lua` | Hints off, delegate Rust ownership, broaden file loading triggers, repository/Maven Java root override, rustaceanvim major version and eager load |
@@ -122,7 +122,7 @@ With the fork's current history rules and no explicit provider globals, default 
 
 | Finding | Evidence strength / implication | Next verification or decision |
 | --- | --- | --- |
-| Fork not selected by consumer | **V:** both spec URLs and lock identity are upstream today | Restore intentional deployment only in an approved follow-up; runtimepath/plugin provenance check |
+| Fork not selected by consumer | **V at the 2026-10-25 snapshot:** both spec URLs and lock identity were upstream | Resolved in the October 26 follow-up; retain the finding as historical context and keep runtime provenance checks for future source changes |
 | Snacks image key is `images` | **V:** personal opts use `images`; installed Snacks declares/loads `image` | That configuration does not enable the documented image module; decide which image workflow is wanted |
 | Picker layout sits outside `opts` | **V:** `plugins/snacks.lua` has top-level `layouts`, while Snacks picker config owns `layouts` | That field is not passed to `Snacks.setup(opts)`; intended layout needs a targeted fix/test |
 | Snacks setup hook replaced | **V:** personal `config` bypasses upstream notification-restoration wrapper | **I:** early-message routing can differ; test headless and interactive histories before changing |

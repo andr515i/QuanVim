@@ -12,7 +12,7 @@ Keep lazy.nvim and the useful LazyVim integration code. Make the installed sourc
 
 These can be made one slice at a time; no need to decide the whole architecture first.
 
-1. **Deployment:** should the isolated consumer track the merged remote fork or a local source checkout? Today's bootstrap points upstream despite the merged fork fix. Which repository is authoritative for the consumer?
+1. **Deployment:** should the isolated consumer track the merged remote fork or a local source checkout? The October 26 follow-up aligned the consumer with the merged remote fork and verified its runtime identity; future changes should preserve that provenance.
 2. **Support contract:** personal Linux-only distribution, or retain Windows/PowerShell/VSCode and downstream configuration compatibility? Which Neovim versions must work? Current source requires >= 0.11.2, with newer-version branches.
 3. **Providers:** default picker (FzfLua/Snacks/Telescope), explorer (Neo-tree/Snacks/mini.files), completion engine and snippet engine. Alternatives can stay available; default choice does not require deletion.
 4. **Editing policy:** diagnostic severity/display and quickfix ownership; formatting on save; snippet versus Copilot acceptance keys; spell/wrap/textwidth behavior.
@@ -41,9 +41,9 @@ Complexity and risk are relative to this codebase, not time estimates. Each row 
 
 ### 1. Establish source provenance
 
-Change only the consumer's distribution selection and matching overrides after approval. Validate resolved plugin name, URL, directory, commit and runtimepath. Confirm upstream and fork are not both configured unintentionally. Show the resulting spec/lock diff; preserve unrelated plugin pins and user edits. Do not modify the active config or old reference.
+The October 26 follow-up completed this slice: it changed only the consumer's distribution selection and matching override, validated the resolved plugin name, URL, directory, commit and runtimepath, confirmed upstream and fork were not both configured, and preserved unrelated plugin pins and user edits. Future source changes should repeat these provenance checks. Do not modify the active config or old reference without a separate review.
 
-Acceptance: both no-file and file startup use the intended fork; all selected extras resolve; options and personal theme still load. The startup fix is already merged into source; do not reimplement PR #2 or use broad error suppression.
+Acceptance met by the October 26 follow-up: startup uses the intended fork, selected extras resolve, options and the personal theme still load, and upstream LazyVim is absent at runtime. The startup fix is already merged into source; do not reimplement PR #2 or use broad error suppression.
 
 ### 2. Protect loading and customization contracts
 

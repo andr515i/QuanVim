@@ -8,9 +8,11 @@ Audit date: 2026-10-25. Source: `~/.config/QuanVim`, commit `394859cc` on `main`
 - **Inference** means a likely consequence of that code; runtime ordering or a real project may still need checking.
 - **Decision** means a policy choice for the owner, not an approved implementation change.
 
-This is a static, read-only investigation with documentation output. No configured editor startup, plugin installation, configuration migration, or implementation refactor was run. Normal startup is not read-only: it can install plugins, parsers, and tools and rewrite JSON/lock state. Earlier startup tests and 447 passing checks belong to the PR #2 investigation, not a fresh verification of today's configuration.
+This is a static, read-only investigation with documentation output. No configured editor startup, plugin installation, configuration migration, or implementation refactor was run. Normal startup is not read-only: it can install plugins, parsers, and tools and rewrite JSON/lock state. Earlier startup tests and 447 passing checks belong to the PR #2 investigation, not a fresh verification of the 2026-10-25 configuration.
 
-**Verified deployment mismatch:** today's isolated `lua/config/lazy.lua` and `lua/plugins/LazyVim.lua` both name `LazyVim/LazyVim`, not `andr515i/QuanVim`. Its lockfile names upstream LazyVim at `999700997f72227187d49d8b92667183dc7fc809`, with no QuanVim entry. The source repository contains the fix, but these files no longer select that fork. Installed directories for both distributions exist; directory presence does not prove which is running. Do not attribute the current isolated editor's runtime behavior to this source without checking its plugin metadata/runtimepath in a separately authorized test. Nothing was changed to resolve this mismatch.
+**Historical audit finding (2026-10-25):** the isolated `lua/config/lazy.lua` and `lua/plugins/LazyVim.lua` named `LazyVim/LazyVim`, not `andr515i/QuanVim`. Its lockfile named upstream LazyVim at `999700997f72227187d49d8b92667183dc7fc809`, with no QuanVim entry. Installed directories for both distributions existed; directory presence did not prove which was running. The audit intentionally did not change this mismatch.
+
+**October 26 follow-up:** the isolated configuration was corrected to select `andr515i/QuanVim`. Runtime verification through lazy.nvim confirmed that QuanVim was loaded and upstream LazyVim was absent from the resolved plugin registry and runtimepath. The historical finding above remains part of this audit; it describes the state at the audit snapshot, not the corrected current state.
 
 ## Two repositories, two entry points
 
