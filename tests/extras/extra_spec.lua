@@ -4,10 +4,6 @@
 local Icons = require("mini.icons")
 
 local Plugin = require("lazy.core.plugin")
-_G.LazyVim = require("lazyvim.util")
-require("lazyvim.config")
-LazyVim.config.get_defaults()
-LazyVim.plugin.setup()
 
 describe("Extra", function()
   local Config = require("lazy.core.config")
@@ -31,8 +27,7 @@ describe("Extra", function()
   end, extras)
 
   require("mason").setup()
-  local mr = require("mason-registry")
-  mr.refresh()
+  -- Use the provisioned registry snapshot; normal tests must stay offline.
 
   local lsp_to_pkg = {}
   lsp_to_pkg = require("mason-lspconfig.mappings").get_mason_map().lspconfig_to_package

@@ -1,5 +1,48 @@
 # Contributing to LazyVim
 
+## Local QuanVim regression tests
+
+Run all existing and startup/configuration tests from the repository:
+
+```sh
+./scripts/test
+```
+
+To run only the loading/configuration regressions:
+
+```sh
+./scripts/test tests/startup/config_spec.lua tests/startup/startup_spec.lua
+```
+
+Requires Python 3, Neovim >= 0.11.2, and an already provisioned dependency
+directory containing `lazy.nvim`, `mini.nvim` (for `mini.test`), `plenary.nvim`
+(for `luassert`), `mini.icons`, `mason.nvim`, `mason-lspconfig.nvim`,
+`nvim-treesitter`, and `snacks.nvim`. The default dependency directory is
+`~/.local/share/quanvim/lazy`. An existing Mason registry snapshot at
+`~/.local/share/quanvim/mason/registries/github/mason-org/mason-registry`
+must contain `registry.json`. Missing prerequisites cause an error; the runner
+never downloads them. To use a separately provisioned cache, in fish:
+
+```fish
+env QUANVIM_TEST_DEPS=/path/to/plugins QUANVIM_TEST_REGISTRY=/path/to/mason-registry ./scripts/test
+```
+
+The runner copies dependencies and the registry into a temporary directory and
+removes it on exit. It replaces HOME and XDG config/data/state/cache paths before
+launching Neovim. It does not load or write personal configuration, `nvim_old`,
+or the isolated consumer. Installs, updates, package/rock discovery, project-local
+specs, and change detection are disabled; lazy.nvim management tasks also fail
+explicitly if attempted. Mason tests use the copied registry without refreshing it.
+
+Fresh headless consumers import real distribution and provider specs, execute
+QuanVim and Snacks, and deliberately trigger `VeryLazy` after `VimEnter`. They
+check startup notifications, message history, import diagnostics and exit status.
+Other plugin activation is disabled: this tests loading and customization
+contracts, not real UI entry, language-server attachment, completion, external
+tools, parser builds, the personal theme, or the interactive LazyExtras UI.
+Results depend on the provisioned dependency versions; no versions are fetched
+or updated automatically. The upstream CI configuration is unchanged by this slice.
+
 ## General Guidelines
 
 - Avoid using Vim plugins whenever possible.

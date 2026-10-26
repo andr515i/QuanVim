@@ -136,6 +136,9 @@ function M.single_import(spec)
   spec.import = function()
     local modinfo = vim.loader.find(modname)[1]
     local modpath = modinfo and modinfo.modpath
+    if not modpath then
+      return nil, ("Extra module `%s` not found on runtimepath"):format(modname)
+    end
     local mod, err = loadfile(modpath)
     if mod then
       local ret, foo = mod()
