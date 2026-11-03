@@ -65,6 +65,40 @@ return {
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
+        commands = {
+          -- Preserve the regular Enter behavior when no files are selected.
+          open_selected = function(state)
+            require("neo-tree.sources.filesystem.commands").open(state)
+          end,
+          -- Neo-tree automatically dispatches to the _visual variant for visual
+          -- selections and files marked with Tab.
+          open_selected_visual = function(state, selected_nodes)
+            local file_count = 0
+            for _, node in ipairs(selected_nodes) do
+              if node.type == "file" then
+                local bufnr = vim.fn.bufadd(node.path)
+                if bufnr > 0 then
+                  vim.bo[bufnr].buflisted = true
+                  vim.fn.bufload(bufnr)
+                  file_count = file_count + 1
+                end
+              end
+            end
+
+            if file_count == 0 then
+              -- Selecting a directory alone should still toggle it normally.
+              require("neo-tree.sources.filesystem.commands").open(state)
+            elseif state.tree:get_node().type == "file" then
+              -- Show the file under the cursor while keeping the others loaded.
+              require("neo-tree.sources.filesystem.commands").open(state)
+            end
+          end,
+        },
+        window = {
+          mappings = {
+            ["<cr>"] = "open_selected",
+          },
+        },
       },
       window = {
         mappings = {
